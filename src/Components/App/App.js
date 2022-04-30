@@ -4,16 +4,17 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap';
 import './App.css';
 import Sidebar from "../Sidebar/Sidebar";
-import HeaderApp from "../HeaderApp/HeaderApp";
-import PageSendMessage from "../PageSendMessage/PageSendMessage";
 import Content from "../Content/Content";
+import {BrowserRouter} from "react-router-dom";
 
 const App = () => {
     return (
-        <div className="App">
-            <Sidebar/>
-            <Content/>
-        </div>
+        <BrowserRouter>
+            <div className="App">
+                <Sidebar/>
+                <Content/>
+            </div>
+        </BrowserRouter>
     );
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import './Sidebar.scss';
+import {Link} from "react-router-dom";
 
 const Sidebar = () => {
     return (
@@ -12,10 +13,10 @@ const Sidebar = () => {
                     <nav>
                         <ul>
                             <li>
-                                <a href="">ارسال پیام</a>
+                                <Link to={"/listMessage"}>پیام ها</Link>
                             </li>
                             <li>
-                                <a href="">پیام ها</a>
+                                <Link to={"/"}>ارسال پیام</Link>
                             </li>
                         </ul>
                     </nav>

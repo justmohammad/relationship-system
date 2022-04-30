@@ -59,9 +59,34 @@ const PageSendMessage = () => {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label">آپلود سند :</label>
-                    <input type="file"/>
+                    <input type="file" style={{width: '210px'}}/>
                 </div>
-                <button type="submit" className="btn btn-primary">ارسال</button>
+                <div className="mb-3">
+                    <div className={"task-section"}>
+                        <div className="make-task" id={"exampleFormControlMakeTask"}>
+                            <label htmlFor="exampleFormControlMakeTask" className="form-label">ایجاد وظیفه : </label>
+                            <div className={"task-input"}>
+                                <input type="text" className={"form-control"}/>
+                                <button className={"btn btn-primary"}>افزودن</button>
+                            </div>
+                        </div>
+                        <div className={"mb-3"}>
+                            <label htmlFor="exampleFormControlMakeTask" className="form-label"
+                                   style={{marginRight: '100px'}}> وظایف : </label>
+                            <div className="tasks">
+                                <ol>
+                                    <li>وظیفه 1</li>
+                                    <li>وظیفه 2</li>
+                                    <li>وظبفه 3</li>
+                                    <li>وظیفه 4</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="btn-send">
+                    <button type="submit" className="btn btn-primary">ارسال</button>
+                </div>
             </form>
         </section>
     );

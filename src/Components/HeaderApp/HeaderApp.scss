@@ -1,12 +1,37 @@
 header {
   height: 70px;
   width: 100%;
+  border-bottom: 1px solid rgba(195, 199, 199, 0.72);
 
   .title-app {
-    height: 70px;
-    background: #fff;
     display: flex;
-    align-items: center;
+
+    .header-right {
+      height: 69px;
+      padding-right: 20px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      margin-right: 850px;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        margin-left: 10px;
+      }
+
+      p {
+        margin-top: 10px;
+      }
+    }
+
+    .logout-btn {
+      margin-top: 18px;
+      margin-right: 20px;
+    }
   }
 }
-
