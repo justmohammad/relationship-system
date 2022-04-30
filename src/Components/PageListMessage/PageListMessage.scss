@@ -1,0 +1,26 @@
+.list-message {
+  margin: 20px;
+
+  input[type=search] {
+    width: 300px;
+    margin-bottom: 20px;
+  }
+
+  label {
+    margin-bottom: 10px;
+  }
+
+  i {
+
+    button {
+      background: transparent;
+      border: 0;
+      color: #f50a0a;
+      transition: all 0.1s ease-in-out;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+}
