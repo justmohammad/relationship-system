@@ -1,0 +1,15 @@
+#root {
+    width: 100%;
+}
+
+.App {
+    height: 100%;
+    display: flex;
+}
+
+body {
+    direction: rtl;
+    font-family: shabnam, serif;
+    height: 750px;
+    display: flex;
+}
