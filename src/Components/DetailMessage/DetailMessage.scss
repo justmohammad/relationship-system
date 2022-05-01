@@ -1,3 +1,24 @@
-.detail-message {
+.accordion {
   margin: 20px;
+
+  .displayControl {
+    display: none;
+  }
+
+  .accordion-button {
+    &:after {
+      display: none;
+    }
+  }
+
+  .accordion-body {
+    button {
+      margin-left: 10px;
+
+      a {
+          color: #fff;
+          text-decoration: none;
+      }
+    }
+  }
 }

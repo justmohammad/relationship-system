@@ -13,10 +13,10 @@ const Sidebar = () => {
                     <nav>
                         <ul>
                             <li>
-                                <Link to={"/listMessage"}>پیام ها</Link>
+                                <Link to={"/"}>پیام ها</Link>
                             </li>
                             <li>
-                                <Link to={"/"}>ارسال پیام</Link>
+                                <Link to={"/sendMessage"}>ارسال پیام</Link>
                             </li>
                         </ul>
                     </nav>

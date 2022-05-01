@@ -11,9 +11,9 @@ const Content = () => {
         <div className={"content-app"}>
             <HeaderApp/>
             <Switch>
-                <Route exact path={"/"} component={PageSendMessage}/>
-                <Route exact path={"/listMessage"} component={PageListMessage}/>
-                <Route exact path={"/detailMessage"} component={DetailMessage}/>
+                <Route exact path={"/sendMessage"} component={PageSendMessage}/>
+                <Route exact path={"/"} component={PageListMessage}/>
+                <Route path={"/detailMessage/:id"} component={DetailMessage}/>
             </Switch>
         </div>
     );

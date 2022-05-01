@@ -1,7 +1,18 @@
-import React from 'react';
+import React, {useReducer, useState} from 'react';
+import taskReducer from '../../Reducer/TaskReducer';
 import './PageSendMessage.scss';
 
 const PageSendMessage = () => {
+
+    const [state, dispatch] = useReducer(taskReducer, []);
+    const [task, setTask] = useState('')
+
+    const addTask = (e) => {
+        e.preventDefault();
+        dispatch({type: 'ADD', payload: task});
+        setTask('')
+    }
+
     return (
         <section>
             <form>
@@ -66,20 +77,20 @@ const PageSendMessage = () => {
                         <div className="make-task" id={"exampleFormControlMakeTask"}>
                             <label htmlFor="exampleFormControlMakeTask" className="form-label">ایجاد وظیفه : </label>
                             <div className={"task-input"}>
-                                <input type="text" className={"form-control"}/>
-                                <button className={"btn btn-primary"}>افزودن</button>
+                                <input type="text" className={"form-control"} value={task}
+                                       onChange={event => setTask(event.target.value)}/>
+                                <button className={"btn btn-primary"} type={"submit"} onClick={addTask}>افزودن</button>
                             </div>
                         </div>
                         <div className={"mb-3"}>
                             <label htmlFor="exampleFormControlMakeTask" className="form-label"
                                    style={{marginRight: '100px'}}> وظایف : </label>
                             <div className="tasks">
-                                <ol>
-                                    <li>وظیفه 1</li>
-                                    <li>وظیفه 2</li>
-                                    <li>وظبفه 3</li>
-                                    <li>وظیفه 4</li>
-                                </ol>
+                                {state.map((value,index) =>
+                                    <ul>
+                                        <li>{`${index+1} . ${value}`}</li>
+                                    </ul>
+                                )}
                             </div>
                         </div>
                     </div>

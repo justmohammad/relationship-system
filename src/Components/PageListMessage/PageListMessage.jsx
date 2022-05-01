@@ -4,6 +4,34 @@ import {Link} from "react-router-dom";
 import {BsFileText, BsTrash} from "react-icons/bs";
 
 const PageListMessage = () => {
+
+    const message = [
+        {
+            id: 1,
+            from: 'سازمان هواشناسی',
+            subject: 'وضعیت بد هوا',
+            date: '1401/2/10',
+        },
+        {
+            id: 2,
+            from: 'سازمان هواشناسی',
+            subject: 'وضعیت بد هوا',
+            date: '1401/2/10',
+        },
+        {
+            id: 3,
+            from: 'سازمان هواشناسی',
+            subject: 'وضعیت بد هوا',
+            date: '1401/2/10',
+        },
+        {
+            id: 4,
+            from: 'سازمان هواشناسی',
+            subject: 'وضعیت بد هوا',
+            date: '1401/2/10',
+        }
+    ]
+
     return (
         <div className={"list-message"} id={"list-message"}>
             <label htmlFor="search-message">جستجو :</label>
@@ -20,42 +48,22 @@ const PageListMessage = () => {
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>1401/2/10</td>
-                    <td>
-                        <i>
-                            <button><BsTrash/></button>
-                            <button><Link to={"/detailMessage"}><BsFileText className={"text-primary"}/></Link></button>
-                        </i>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>1401/2/10</td>
-                    <td>
-                        <i>
-                            <button><BsTrash/></button>
-                            <button><Link to={"/detailMessage"}><BsFileText className={"text-primary"}/></Link></button>
-                        </i>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>1401/2/10</td>
-                    <td>
-                        <i>
-                            <button><BsTrash/></button>
-                            <button><Link to={"/detailMessage"}><BsFileText className={"text-primary"}/></Link></button>
-                        </i>
-                    </td>
-                </tr>
+                {
+                    message.map((value,index) =>
+                    <tr>
+                        <th scope="row">{index+1}</th>
+                        <td>{value.from}</td>
+                        <td>{value.subject}</td>
+                        <td>{value.date}</td>
+                        <td>
+                            <i>
+                                <button><BsTrash/></button>
+                                <button><Link to={`/detailMessage/${value.id}`}><BsFileText className={"text-primary"}/></Link></button>
+                            </i>
+                        </td>
+                    </tr>
+                    )
+                }
                 </tbody>
             </table>
         </div>
