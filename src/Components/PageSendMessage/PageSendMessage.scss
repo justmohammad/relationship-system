@@ -10,6 +10,7 @@ section {
       display: flex;
       align-items: center;
       margin: 10px;
+      float: right;
 
       input {
         margin: 0 5px;
@@ -17,7 +18,7 @@ section {
     }
 
     .to-org {
-      display: flex;
+      margin-bottom: 150px;
     }
 
     .task-section {

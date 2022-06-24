@@ -15,6 +15,7 @@ const HeaderApp = () => {
                     <p> تاریخ امروز : {date.format()}</p>
                 </div>
                 <div className="header-left">
+                    <h5>استانداری مرکزی</h5>
                     <div className="img-profile">
                         <img src="/images/images.png" alt="" width={"40px"} height={"40px"} className={"rounded-circle"}/>
                     </div>

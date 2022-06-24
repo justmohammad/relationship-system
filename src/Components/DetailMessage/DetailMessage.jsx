@@ -1,6 +1,7 @@
-import React, {useRef} from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import './DetailMessage.scss';
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import axios from "axios";
 
 const DetailMessage = () => {
 
@@ -8,62 +9,95 @@ const DetailMessage = () => {
     const accordionRef2 = useRef()
 
     const Reference = () => {
-        accordionRef.current.click()
-    }
-
-    const answer = () => {
-        const displayElement = document.getElementById('panelsStayOpen-headingTwo').style.display
-        if (displayElement === 'block') {
-            document.getElementById('panelsStayOpen-headingTwo').style.display = 'none'
-        } else {
-            document.getElementById('panelsStayOpen-headingTwo').style.display = 'block'
-        }
+        document.getElementById('panelsStayOpen-headingTwo').style.display = "flex"
         accordionRef2.current.click()
     }
 
-    return (
+    const Reference2 = () => {
+        document.getElementById('panelsStayOpen-headingTwo').style.display = "none"
+        accordionRef.current.click()
+    }
 
-        <div className="accordion" id="accordionPanelsStayOpenExample">
+    const [organization,setOrganization] = useState([]);
+    const [message,setMessage] = useState([]);
+
+    let {id} = useParams();
+
+
+    useEffect(() => {
+        axios.get("http://relapp.freehost.io/rest/apiOrganization.php")
+        .then(Response => {
+           const data = Response.data;
+           setOrganization(data);
+            })
+        .catch(error => console.log(error))
+
+        axios.get(`http://relapp.freehost.io/rest/apiReciveMessages.php?id=${id}`)
+        .then(Response => {
+           const data = Response.data;
+           setMessage(data);
+            })
+        .catch(error => console.log(error))
+    },[message])
+
+
+    return (
+        <div className="accordion" id="accordionExample">
             <div className="accordion-item">
-                <h2 className="accordion-header" id="panelsStayOpen-headingOne">
-                    <button className="accordion-button" type="button" data-bs-toggle="collapse" ref={accordionRef2}
-                            data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                            aria-controls="panelsStayOpen-collapseOne">
-                        Accordion Item #1
+                <h2 className="accordion-header" id="headingOne">
+                    <button className="accordion-button" type="button" data-bs-toggle="collapse" ref={accordionRef}
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        جزئیات پیام
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseOne" className="accordion-collapse collapse show"
-                     aria-labelledby="panelsStayOpen-headingOne">
+                <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne"
+                     data-bs-parent="#accordionExample">
                     <div className="accordion-body">
-                        <p><strong>This is the first item's accordion body.</strong> It is shown by default, until the
-                            collapse plugin adds the appropriate classes that we use to style each element. These classes
-                            control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                            modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                            that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                            does limit overflow.</p>
+                        {
+                            message.map(value =>        
+                                <p>{value.text}</p>
+                            )
+                        }
                         <button className={"btn btn-primary"}><Link to={"/"}>بازگشت</Link></button>
-                        <button className={"btn btn-primary"} onClick={Reference}>ارجاع</button>
+                        <button className={"btn btn-primary"} onClick={Reference}>ارجاع به جای دیگر</button>
+                        <button className={"btn btn-primary"}>انجام شد و ارسال به فرستنده</button>
                     </div>
                 </div>
             </div>
             <div className="accordion-item">
-                <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" ref={accordionRef}
-                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" onClick={answer}
-                            aria-controls="panelsStayOpen-collapseTwo">
-                        Accordion Item #2
+                <h2 className="accordion-header" id="headingTwo">
+                    <button className="accordion-button collapsed" id={"panelsStayOpen-headingTwo"} type="button" data-bs-toggle="collapse" ref={accordionRef2} style={{display: "none"}}
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        پاسخ به پیام
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseTwo" className="accordion-collapse collapse"
-                     aria-labelledby="panelsStayOpen-headingTwo">
+                <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo"
+                     data-bs-parent="#accordionExample">
                     <div className="accordion-body">
-                        <p><strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                            collapse plugin adds the appropriate classes that we use to style each element. These classes
-                            control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                            modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                            that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                            does limit overflow.</p>
-                        <button className={"btn btn-primary"} onClick={Reference}>بازگشت</button>
+                        {
+                            message.map(value =>        
+                                <p className={"text-muted"}>{value.text}</p>
+                            )
+                        }
+                        
+                        <form>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputCheck" className="form-label">به سازمان های :</label>
+                                <div id="exampleInputCheck" className="to-org">
+                                    {
+                                        organization.map(value =>
+                                            <div className="form-check">
+                                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                    {value.Organization}
+                                                </label>
+                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        </form>
+                        <button className={"btn btn-primary"} onClick={Reference2}>بازگشت</button>
                         <button className={"btn btn-primary"}>ارسال پاسخ</button>
                     </div>
                 </div>

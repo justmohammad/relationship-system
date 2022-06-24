@@ -13,7 +13,10 @@ const Sidebar = () => {
                     <nav>
                         <ul>
                             <li>
-                                <Link to={"/"}>پیام ها</Link>
+                                <Link to={"/"}>پیام های دریافت شده</Link>
+                            </li>
+                            <li>
+                                <Link to={"/sentMessage"}>پیام های ارسال شده</Link>
                             </li>
                             <li>
                                 <Link to={"/sendMessage"}>ارسال پیام</Link>

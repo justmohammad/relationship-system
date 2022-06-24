@@ -16,12 +16,16 @@ header {
 
     .header-left {
       display: flex;
-      margin-right: 850px;
+      margin-right: 650px;
       justify-content: center;
       align-items: center;
 
       img {
         margin-left: 10px;
+      }
+
+      h5 {
+        margin-left: 50px;
       }
 
       p {
