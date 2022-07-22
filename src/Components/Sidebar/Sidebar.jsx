@@ -1,56 +1,60 @@
 import React, {useEffect, useState} from 'react';
 import './Sidebar.scss';
-import {Link} from "react-router-dom";
-import axios from "axios";
+import 'react-pro-sidebar/dist/css/styles.css';
+import {Link, useLocation} from "react-router-dom";
+import {GetAdmin} from "../../Api/FunctionsApi/GetApi";
+import {Menu, MenuItem, ProSidebar, SidebarHeader} from "react-pro-sidebar";
+import {
+    BsEnvelopeFill,
+    BsEnvelopeOpenFill,
+    BsFillCursorFill, BsFillPaletteFill,
+    BsFillPersonPlusFill, BsPeopleFill
+} from "react-icons/bs";
 
 const Sidebar = () => {
 
-    const [admin, setAdmin] = useState([])
+    const [admin, setAdmin] = useState([]);
 
     useEffect(() => {
-        axios.get("http://relapp.freehost.io/rest/apigetadmin.php")
-            .then(Response => {
-                const data = Response.data;
-                setAdmin(data);
-            })
-            .catch(error => console.log(error))
+        GetAdmin((isOk,data) => {
+            if (isOk) setAdmin(data)
+        })
     }, [])
 
     return (
-        <aside>
-            <div className="sidebar">
-                <div className="title-sidebar">
+
+        <ProSidebar breakPoint={"md"} rtl>
+            <SidebarHeader>
+                <div className="header-panel">
+                    <i><BsFillPaletteFill/></i>
                     <h5>پنل مدیریت</h5>
                 </div>
-                <div className="menu">
-                    <nav>
-                        <ul>
-                            <li>
-                                <Link to={"/"}>پیام های دریافت شده</Link>
-                            </li>
-                            <li>
-                                <Link to={"/sentMessage"}>پیام های ارسال شده</Link>
-                            </li>
-                            <li>
-                                <Link to={"/sendMessage"}>ارسال پیام</Link>
-                            </li>
-                            {
-                                admin.map(value =>
-                                <>
-                                    <li className={value.name === localStorage.getItem('name') ? '' : 'hide-list'}>
-                                        <Link to={"/users"}>کاربران</Link>
-                                    </li>
-                                    <li className={value.name === localStorage.getItem('name') ? '' : 'hide-list'}>
-                                        <Link to={"/newUser"}>کاربر جدید</Link>
-                                    </li>
-                                </>
-                                )
-                            }
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </aside>
+
+            </SidebarHeader>
+            <Menu iconShape="square">
+                <MenuItem icon={<BsEnvelopeOpenFill />}>
+                    <Link to={"/"}>پیام های دریافت شده</Link>
+                </MenuItem>
+                <MenuItem icon={<BsEnvelopeFill />}>
+                    <Link to={"/sentMessage"}>پیام های ارسال شده</Link>
+                </MenuItem>
+                <MenuItem icon={<BsFillCursorFill />}>
+                    <Link to={"/sendMessage"}>ارسال پیام</Link>
+                </MenuItem>
+                {
+                    admin.map(value =>
+                        <>
+                <MenuItem icon={<BsPeopleFill />} className={value.name === localStorage.getItem('name') ? '' : 'hide-list'}>
+                    <Link to={"/users"}>کاربران</Link>
+                </MenuItem>
+                <MenuItem icon={<BsFillPersonPlusFill />} className={value.name === localStorage.getItem('name') ? '' : 'hide-list'}>
+                    <Link to={"/newUser"}>کاربر جدید</Link>
+                </MenuItem>
+                        </>
+                    )
+                }
+            </Menu>
+        </ProSidebar>
     );
 };
 

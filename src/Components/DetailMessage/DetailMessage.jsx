@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef} from 'react';
 import './DetailMessage.scss';
 import {Link, useParams} from "react-router-dom";
+import {GetAllUsers} from "../../Api/FunctionsApi/GetApi"
 import axios from "axios";
 
 const DetailMessage = () => {
@@ -25,20 +26,19 @@ const DetailMessage = () => {
 
 
     useEffect(() => {
-        axios.get("http://relapp.freehost.io/rest/apiOrganization.php")
-        .then(Response => {
-           const data = Response.data;
-           setOrganization(data);
-            })
-        .catch(error => console.log(error))
+        GetAllUsers((isOk, data)=>{
+            isOk ? setOrganization(data) : alert('a');
+        });
+    },[])
 
+    useEffect(() => {
         axios.get(`http://relapp.freehost.io/rest/apiediteMessages.php?id=${id}`)
         .then(Response => {
            const data = Response.data;
            setMessage(data);
             })
-        .catch(error => console.log(error))
-    },[message])
+        .catch(error => console.log(error));
+    },[])
 
 
     return (

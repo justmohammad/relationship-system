@@ -1,13 +1,15 @@
 import React, {useState, useEffect, useReducer} from 'react';
 import './SendMessage.scss';
-import axios from "axios";
+import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import {GetAllUsers} from "../../Api/FunctionsApi/GetApi";
+import {SubmitMessage} from "../../Api/FunctionsApi/PostApi";
+import {toast} from "react-toastify";
 
 const SendMessage = () => {
 
     const [organization, setOrganization] = useState([]);
-    const [from_user, setFrom] = useState([]);
     const [subject, setSubject] = useState([]);
     const [message, setMessage] = useState('')
 
@@ -17,7 +19,9 @@ const SendMessage = () => {
         switch (action.type) {
             case "COMPLETE":
                 const unique = arr => [...new Set(arr)];
-                return unique([...state,action.value])
+                return unique([...state, action.value]);
+            case "EMPTY":
+                return state = [];
             default:
                 return state;
         }
@@ -25,7 +29,7 @@ const SendMessage = () => {
     const [to_user, dispatch] = useReducer(reducer, []);
 
     const options = []
-    for (let i=0; i<organization.length; i++) {
+    for (let i = 0; i < organization.length; i++) {
         options[i] = {
             value: organization[i].office,
             label: organization[i].office,
@@ -33,25 +37,36 @@ const SendMessage = () => {
     }
 
     useEffect(() => {
-        axios.get("http://relapp.freehost.io/rest/apiOrganization.php")
-            .then(Response => {
-                const data = Response.data;
-                setOrganization(data);
-            })
-            .catch(error => console.log(error))
+        GetAllUsers((isOk, data) => {
+            if (isOk) setOrganization(data)
+        });
     }, [])
 
 
-    const sendMessage = () => {
-
+    const sendMessage = (e) => {
+        e.preventDefault();
         const data = new FormData();
         data.append('subject', subject);
         data.append('text', message);
-        data.append('from', from_user);
+        data.append('from', localStorage.getItem('office'));
         data.append('to', JSON.stringify(to_user));
 
-        axios.post(`http://relapp.freehost.io/rest/apiSendMessage.php`, data)
-            .catch(error => console.log(error))
+        SubmitMessage(data, (isOk) => {
+            if (isOk) {
+                toast.success('پیام با موفقیت ارسال شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        })
+
+        setSubject('');
+        setMessage('');
     }
 
     return (
@@ -61,18 +76,12 @@ const SendMessage = () => {
                     <div className="mb-3 col-md-6">
                         <label htmlFor="exampleInputText1" className="form-label">از سازمان :</label>
                         <input type="text" id={"exampleInputText1"} className={"form-control"}
-                               onChange={event => setFrom(event.value)} value={localStorage.getItem('office')} disabled required/>
-                        {/*<Select
-                            onChange = {event => setFrom(event.value)}
-                            closeMenuOnSelect={true}
-                            components={animatedComponents}
-                            options={options}
-                        />*/}
+                               value={localStorage.getItem('office')} disabled required/>
                     </div>
                     <div className="mb-3 col-md-6">
                         <label htmlFor="exampleInputText1" className="form-label">به سازمان های :</label>
                         <Select
-                            onChange = {event => (event.map(item => dispatch({type: "COMPLETE",value: item.value})))}
+                            onChange={event => (event.map(item => dispatch({type: "COMPLETE", value: item.value})))}
                             closeMenuOnSelect={false}
                             components={animatedComponents}
                             isMulti
@@ -83,12 +92,12 @@ const SendMessage = () => {
                 <div className="mb-3">
                     <label htmlFor="exampleInputText2" className="form-label">موضوع :</label>
                     <input type="text" id={"exampleInputText2"} className={"form-control"}
-                           onChange={event => setSubject(event.target.value)} required/>
+                           value={subject} onChange={event => setSubject(event.target.value)} required/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label">توضیحات :</label>
                     <textarea className="form-control" onChange={event => setMessage(event.target.value)}
-                              id="exampleFormControlTextarea1" rows="3" required/>
+                              value={message} id="exampleFormControlTextarea1" rows="3" required/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label">آپلود سند :</label>
@@ -96,7 +105,7 @@ const SendMessage = () => {
                 </div>
 
                 <div className="btn-send">
-                    <button type="submit" className="btn btn-primary" onClick={() => sendMessage()}>ارسال</button>
+                    <button type="submit" className="btn btn-primary" onClick={sendMessage}>ارسال</button>
                 </div>
             </form>
         </section>

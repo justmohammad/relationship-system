@@ -2,7 +2,7 @@ import React from 'react';
 import '../../Config/font.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap';
-import './App.css';
+import './App.scss';
 import Sidebar from "../Sidebar/Sidebar";
 import Content from "../Content/Content";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";

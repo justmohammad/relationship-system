@@ -1,23 +1,33 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
 import {BsTrash} from "react-icons/bs";
+import {GetAllUsers} from "../../Api/FunctionsApi/GetApi";
+import {DeleteUser} from "../../Api/FunctionsApi/DeleteApi";
+import {toast} from "react-toastify";
 
 const Users = () => {
 
-    const [users,setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        axios.get("http://relapp.freehost.io/rest/apiOrganization.php")
-            .then(Response => {
-                const data = Response.data;
-                setUsers(data);
-            })
-            .catch(error => console.log(error))
+        GetAllUsers((isOk, data) => {
+            if (isOk) setUsers(data)
+        });
     }, [users])
 
-    const deleteMessage = (id) => {
-        axios.delete(`http://relapp.freehost.io/rest/apideleteuser.php?id=${id}`)
-            .catch(error => console.log(error));
+    const deleteUser = (id) => {
+        DeleteUser(id, (isOk) => {
+            if (isOk) {
+                toast.success('کاربر با موفقیت حذف شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        })
     }
 
     return (
@@ -26,36 +36,40 @@ const Users = () => {
                 <label htmlFor="search-message">جستجو :</label>
                 <input type="search" id={"search-message"} className={"form-control"}/>
             </form>
-            <label htmlFor="list-message">لیست پیام ها</label>
-            <table className="table">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">نام و نام خانوادگی</th>
-                    <th scope="col">نام شرکت</th>
-                    <th scope="col">ایمیل</th>
-                    <th scope="col">حذف از سیستم</th>
-                </tr>
-                </thead>
-                <tbody>
-                {
-                    users.map((value, index) =>
-
+            <label htmlFor="list-message">لیست کاربر ها</label>
+            {
+                !users ? <div style={{margin: "50px 500px"}}>کاربری موجود نیست</div> :
+                    <table className="table">
+                        <thead>
                         <tr>
-                            <th scope="row">{index + 1}</th>
-                            <td>{value.name}</td>
-                            <td>{value.office}</td>
-                            <td>{value.email}</td>
-                            <td>
-                                <i>
-                                    <button onClick={() => deleteMessage(value.id)}><BsTrash/></button>
-                                </i>
-                            </td>
+                            <th scope="col">#</th>
+                            <th scope="col">نام و نام خانوادگی</th>
+                            <th scope="col">نام شرکت</th>
+                            <th scope="col">ایمیل</th>
+                            <th scope="col">حذف از سیستم</th>
                         </tr>
-                    )
-                }
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                        {
+
+                            users.map((value, index) =>
+
+                                <tr>
+                                    <th scope="row">{index + 1}</th>
+                                    <td>{value.name}</td>
+                                    <td>{value.office}</td>
+                                    <td>{value.email}</td>
+                                    <td>
+                                        <i>
+                                            <button onClick={() => deleteUser(value.id)}><BsTrash/></button>
+                                        </i>
+                                    </td>
+                                </tr>
+                            )
+                        }
+                        </tbody>
+                    </table>
+            }
         </div>
     );
 };

@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import './NewUser.scss';
-import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {Col} from "react-bootstrap";
+import {GetAllWaitingNewUser} from "../../Api/FunctionsApi/GetApi";
+import {DeleteWaitingNewUser} from "../../Api/FunctionsApi/DeleteApi";
+import {AddUser} from "../../Api/FunctionsApi/PostApi";
+import {toast} from "react-toastify";
 
 const NewUser = () => {
 
@@ -25,20 +28,10 @@ const NewUser = () => {
     }
 
     useEffect(() => {
-        axios.get("http://relapp.freehost.io/rest/apiloginuser.php")
-            .then(Response => {
-                const data = Response.data;
-                setUsers(data);
-            })
-            .catch(error => console.log(error))
+        GetAllWaitingNewUser((isOk,data) => {
+            isOk ? setUsers(data) : alert('b');
+        })
     }, [users])
-
-    const deleteUser1 = (id) => {
-        axios.delete(`http://relapp.freehost.io/rest/apideleteloginuser.php?id=${id}`)
-            .then()
-            .catch(error => console.log(error));
-        handleCloseModal1()
-    }
 
     const acceptUser = (user) => {
         const data = new FormData();
@@ -47,21 +40,57 @@ const NewUser = () => {
         data.append('email', user.email);
         data.append('password', user.password);
 
-        axios.post(`http://relapp.freehost.io/rest/apisenduser.php`, data)
-            .catch(error => console.log(error))
-        deleteUser1(user.id)
+        AddUser(data,(isOk) => {
+            if (isOk) {
+                toast.success('کاربر با موفقیت ثبت شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        })
+
+        DeleteWaitingNewUser(user.id, (isOk) => {
+            if (isOk) {
+                toast.success('کاربر با موفقیت حذف شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        })
+        handleCloseModal1();
     }
 
-    const deleteUser2 = (id) => {
-        axios.delete(`http://relapp.freehost.io/rest/apideleteloginuser.php?id=${id}`)
-            .then()
-            .catch(error => console.log(error));
+    const RejectUser = (id) => {
+        DeleteWaitingNewUser(id, (isOk) => {
+            if (isOk) {
+                toast.success('کاربر با موفقیت حذف شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        })
         handleCloseModal2()
     }
 
     return (
         <>
             {
+                !users ? <div style={{margin: "50px 500px"}}>کاربر جدیدی موجود نیست</div> :
                 users.map(value =>
                     <>
                         <div className="detail-new-user">
@@ -102,7 +131,7 @@ const NewUser = () => {
                     <Button variant="secondary" onClick={handleCloseModal2}>
                         بستن
                     </Button>
-                    <Button variant="primary" onClick={() => deleteUser2(userAction.id)}>
+                    <Button variant="primary" onClick={() => RejectUser(userAction.id)}>
                         رد کردن
                     </Button>
                 </Modal.Footer>

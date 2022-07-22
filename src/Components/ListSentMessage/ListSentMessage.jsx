@@ -3,6 +3,7 @@ import './ListSentMessage.scss';
 import {BsCheckCircleFill, BsFileText} from "react-icons/bs";
 import {Link} from "react-router-dom";
 import axios from "axios"
+import {GetSentMessages} from "../../Api/FunctionsApi/GetApi";
 
 const ListSentMessage = () => {
 
@@ -12,13 +13,10 @@ const ListSentMessage = () => {
         const data = new FormData();
         data.append('office', localStorage.getItem('office'));
 
-        axios.post("http://relapp.freehost.io/rest/apiMessages.php", data)
-            .then(Response => {
-                const data = Response.data;
-                setMessage(data);
-            })
-            .catch(error => console.log(error))
-    }, [])
+        GetSentMessages(data,(isOk,data) => {
+            if (isOk) setMessage(data)
+        })
+    }, [message])
 
     return (
         <div className={"list-message"} id={"list-message"}>

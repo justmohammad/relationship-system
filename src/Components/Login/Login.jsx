@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import './Login.scss';
-import axios from "axios";
+import {SignUpUser} from "../../Api/FunctionsApi/PostApi";
+import {LoginUser} from "../../Api/FunctionsApi/GetApi";
+import {toast} from "react-toastify";
 
 const mode = 'login';
 
@@ -57,29 +59,105 @@ const LoginForm = (mode) => {
                                 data.append('email', createEmail);
                                 data.append('password', createPassword);
 
-                                axios.post(`http://relapp.freehost.io/rest/apinewuser.php`, data)
-                                    .catch(error => console.log(error))
-                                setErrorBorder('')
-                                alert('اطلاعات شما با موفقیت ثبت شد لطفا در انتطار تایید ادمین باشید و سپس ورود کنید')
+                                SignUpUser(data, (isOk) => {
+                                    if (isOk) {
+                                        setErrorBorder('');
+                                        setFullName('');
+                                        setOffice('');
+                                        setCreateEmail('');
+                                        setCreatePassword('');
+                                        setRepeatPassword('');
+                                        toast.success('اطلاعات شما با موفقیت ثبت شد لطفا در انتطار تایید ادمین باشید و سپس ورود کنید', {
+                                            position: "bottom-left",
+                                            autoClose: 5000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                        });
+                                    } else {
+                                        setErrorBorder('');
+                                        setFullName('');
+                                        setOffice('');
+                                        setCreateEmail('');
+                                        setCreatePassword('');
+                                        setRepeatPassword('');
+                                        toast.error('ثبت نام انجام نشد', {
+                                            position: "bottom-left",
+                                            autoClose: 5000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                        });
+                                    }
+                                })
                             } else {
                                 setErrorBorder('repeatPassword')
                                 setRepeatPassword('');
+                                toast.error('لطفا پسورد را تکرار کنید', {
+                                    position: "bottom-left",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                });
                             }
                         } else {
                             setCreatePassword('');
                             setErrorBorder('createPassword')
+                            toast.error('لطفا پسورد خود را انتخاب کنید', {
+                                position: "bottom-left",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
                         }
                     } else {
                         setCreateEmail('');
                         setErrorBorder('createEmail')
+                        toast.error('لطفا ایمیل خود را وارد کنید', {
+                            position: "bottom-left",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     }
                 } else {
                     setOffice('');
                     setErrorBorder('office')
+                    toast.error('لطفا نام شرکت خود را وارد کنید', {
+                        position: "bottom-left",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 }
             } else {
                 setFullName('');
                 setErrorBorder('fullname')
+                toast.error('لطفا نام و نام خانوادگی خود را وارد کنید', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
         } else {
             if (email) {
@@ -88,31 +166,54 @@ const LoginForm = (mode) => {
                     data.append('email', email);
                     data.append('password', password);
 
-                    axios.post(`http://relapp.freehost.io/rest/apivalidation.php`, data)
-                        .then((response) => {
-                            const data = response.data;
-                            if (data) {
-                                localStorage.setItem('name', data[0].name);
-                                localStorage.setItem('office', data[0].office);
-                                localStorage.setItem('id', data[0].id);
-                                console.log(data);
-                                setErrorBorder('');
-                                setEmail('');
-                                setPassword('');
-                                window.location.reload();
-                            } else {
-                                setErrorBorder('')
-                                setEmail('');
-                                setPassword('');
-                                alert('ایمیل یا رمز ورود اشتباه است');
-                            }
-                        })
-                        .catch(error => console.log(error))
+                    LoginUser(data, (isOk,data) => {
+                        if (isOk) {
+                            localStorage.setItem('name', data[0].name);
+                            localStorage.setItem('office', data[0].office);
+                            localStorage.setItem('id', data[0].id);
+                            console.log(data);
+                            setErrorBorder('');
+                            setEmail('');
+                            setPassword('');
+                            window.location.reload();
+                        } else {
+                            setErrorBorder('')
+                            setEmail('');
+                            setPassword('');
+                            toast.error('ایمیل یا رمز ورود اشتباه است', {
+                                position: "bottom-left",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        }
+                    })
                 } else {
                     setErrorBorder('password')
+                    toast.error('لطفا رمز خود را وارد کنید', {
+                        position: "bottom-left",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 }
             } else {
-                setErrorBorder('email')
+                setErrorBorder('لطفا ایمیل خود را وارد کنید')
+                toast.error('لطفا ایمیل خود را وارد کنید', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
         }
     }

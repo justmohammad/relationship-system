@@ -9,12 +9,13 @@ import ListSentMessage from "../ListSentMessage/ListSentMessage";
 import ReadMessage from "../ReadMessage/ReadMessage";
 import NewUser from "../NewUser/NewUser";
 import Users from "../Users/Users";
+import {Container} from "react-bootstrap";
 
 const Content = () => {
     return (
-        <div className={"content-app"}>
+        <Container className={"content-app"}>
             <HeaderApp/>
-            <div className={"container"}>
+            <Container className={"cont"}>
                 <div className="dynamic-page">
                     <Switch>
                         <Route exact path={"/sendMessage"} component={SendMessage}/>
@@ -26,8 +27,8 @@ const Content = () => {
                         <Route path={"/users"} component={Users}/>
                     </Switch>
                 </div>
-            </div>
-        </div>
+            </Container>
+        </Container>
     );
 };
 

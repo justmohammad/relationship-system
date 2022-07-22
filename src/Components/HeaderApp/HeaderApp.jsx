@@ -4,17 +4,15 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import DateObject from "react-date-object";
 import {BsList} from "react-icons/bs";
-import {DropdownButton} from "react-bootstrap";
+import {Container, DropdownButton, Row} from "react-bootstrap";
 import Dropdown from 'react-bootstrap/Dropdown';
-import axios from "axios";
 
 const HeaderApp = () => {
 
-    const inputRef = useRef();
-    const [imageFile, setImageFile] = useState();
-    const [imagePath, setImagePath] = useState();
-
     const date = new DateObject({calendar: persian, locale: persian_fa})
+    const inputRef = useRef();
+    /*const [imageFile, setImageFile] = useState();
+    const [imagePath, setImagePath] = useState();*/
 
     const logout = () => {
         localStorage.clear();
@@ -53,23 +51,24 @@ const HeaderApp = () => {
     return (
         <header className={"header-app"}>
             <div className="title-app">
-                <div className="header-right">
+                <div className="header-right col-md-9">
                     <p><i><BsList/></i></p>
                     <p> تاریخ امروز : {date.format()}</p>
                 </div>
-                <div className="header-left">
-                    <h5>استانداری مرکزی</h5>
+                <div className="header-left col-md-3">
                     <div className="img-profile">
                         <img src={getImage()} alt="" width={"40px"} height={"40px"} className={"rounded-circle"}/>
                     </div>
                     <div className="name-profile">
                         <DropdownButton id="dropdown-basic-button" className={"style-button-dropdown"}
                                         title={localStorage.getItem('name')}>
-                            <Dropdown.Item onClick={() => inputRef.current.click()}>آپلود عکس پروفایل</Dropdown.Item>
+                            <Dropdown.Item onClick={() => inputRef.current.click()}>آپلود عکس
+                                پروفایل</Dropdown.Item>
                             <Dropdown.Item onClick={logout}>خروج</Dropdown.Item>
                         </DropdownButton>
                         <form action="" enctype="multipart/form-data" style={{display: 'none'}}>
-                            <input type="file" style={{display: 'none'}} ref={inputRef} onChange={handleAvatarChange}/>
+                            <input type="file" style={{display: 'none'}} ref={inputRef}
+                                   onChange={handleAvatarChange}/>
                         </form>
                     </div>
                 </div>

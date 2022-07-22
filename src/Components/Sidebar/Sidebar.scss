@@ -1,46 +1,13 @@
-aside {
-  height: 100%;
-
-  .sidebar {
-    background: #343a40;
-    color: #fff;
-    width: 250px;
-    height: 100%;
-
-
-    .title-sidebar {
-      border-bottom: 1px solid #4b545c;
-      height: 70px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .menu nav ul {
-      padding: 15px 0;
-
-      li {
-        display: flex;
-        align-items: center;
-        margin: 10px 13px;
-
-        a {
-          color: #fff;
-          width: 100%;
-          padding: 12px 20px;
-          border-radius: 10px;
-          text-decoration: none;
-          transition: all 0.2s ease-in-out;
-
-          &:hover {
-            background: rgba(140, 145, 145, 0.7);
-          }
-        }
-      }
-    }
-  }
-}
-
 .hide-list {
   display: none !important;
+}
+
+.header-panel {
+    display: flex;
+    margin: 18px 30px;
+
+  i {
+    margin-left: 15px;
+    font-size: 22px;
+  }
 }

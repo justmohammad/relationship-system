@@ -2,7 +2,9 @@ import React, {useEffect, useState} from 'react';
 import './ListMessage.scss';
 import {Link} from "react-router-dom";
 import {BsFileText, BsTrash} from "react-icons/bs";
-import axios from "axios";
+import {GetReceiveMessages} from "../../Api/FunctionsApi/GetApi";
+import {DeleteMessage} from "../../Api/FunctionsApi/DeleteApi";
+import {toast} from "react-toastify";
 
 const ListMessage = () => {
 
@@ -11,19 +13,25 @@ const ListMessage = () => {
     useEffect(() => {
         const data = new FormData();
         data.append('office', localStorage.getItem('office'));
-
-        axios.post("http://relapp.freehost.io/rest/apiReciveMessages.php",data)
-            .then(Response => {
-                const data = Response.data;
-                setMessage(data);
-            })
-            .catch(error => console.log(error))
-    }, [])
+        GetReceiveMessages(data, (isOk, data) => {
+            if (isOk) setMessage(data)
+        })
+    }, [message])
 
     const deleteMessage = (id) => {
-        axios.delete(`http://relapp.freehost.io/rest/apiDeleteMessage.php?id=${id}`)
-            .then()
-            .catch(error => console.log(error));
+        DeleteMessage(id, (isOk) => {
+            if (isOk) {
+                toast.success('پیام با موفقت پاک شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        });
     }
 
     return (
