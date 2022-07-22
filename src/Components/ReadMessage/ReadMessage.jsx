@@ -1,8 +1,8 @@
 import React, {useRef} from 'react';
-import './ReadSentMessage.scss';
+import './ReadMessage.scss';
 import {Link} from "react-router-dom";
 
-const ReadSentMessage = () => {
+const ReadMessage = () => {
 
     const accordionRef = useRef()
     const accordionRef2 = useRef()
@@ -54,4 +54,4 @@ const ReadSentMessage = () => {
     );
 };
 
-export default ReadSentMessage;
+export default ReadMessage;

@@ -32,7 +32,7 @@ const DetailMessage = () => {
             })
         .catch(error => console.log(error))
 
-        axios.get(`http://relapp.freehost.io/rest/apiReciveMessages.php?id=${id}`)
+        axios.get(`http://relapp.freehost.io/rest/apiediteMessages.php?id=${id}`)
         .then(Response => {
            const data = Response.data;
            setMessage(data);

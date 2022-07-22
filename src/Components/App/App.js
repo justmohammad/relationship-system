@@ -5,26 +5,43 @@ import 'bootstrap/dist/js/bootstrap';
 import './App.css';
 import Sidebar from "../Sidebar/Sidebar";
 import Content from "../Content/Content";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Login from "../Login/Login";
-import SignUp from "../SignUp/SignUp";
 
 const App = () => {
     return (
         <BrowserRouter>
             <Switch>
-                <Route exact path={"/login"} component={Login}/>
-                <Route exact path={"/signup"} component={SignUp}/>
-                <Route>
+                <PublicRoute exact path={"/login"} component={Login}/>
+                <PrivateRoute path={"/"} render={() =>
                     <div className="App">
                         <Sidebar/>
                         <Content/>
                     </div>
-                </Route>
+                }/>
             </Switch>
-
         </BrowserRouter>
     );
+}
+
+const isLogin = () => !!localStorage.getItem('name');
+
+const PublicRoute = ({component, ...props}) => {
+    return <Route {...props} render={(props) => {
+        if (isLogin())
+            return <Redirect to={"/"}/>
+        else
+            return React.createElement(component, props);
+    }}/>
+}
+
+const PrivateRoute = ({render,...props}) => {
+    return <Route {...props} render={(props) => {
+        if (isLogin())
+            return render(props);
+        else
+            return <Redirect to={"/login"}/>;
+    }}/>
 }
 
 export default App;

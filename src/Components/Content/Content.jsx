@@ -1,24 +1,32 @@
 import React from 'react';
 import './Content.scss';
 import HeaderApp from "../HeaderApp/HeaderApp";
-import PageSendMessage from "../PageSendMessage/PageSendMessage";
+import SendMessage from "../SendMessage/SendMessage";
 import {Route, Switch} from "react-router-dom";
-import PageListMessage from "../PageListMessage/PageListMessage";
+import ListMessage from "../ListMessage/ListMessage";
 import DetailMessage from "../DetailMessage/DetailMessage";
 import ListSentMessage from "../ListSentMessage/ListSentMessage";
-import ReadSentMessage from "../ReadSentMessage/ReadSentMessage";
+import ReadMessage from "../ReadMessage/ReadMessage";
+import NewUser from "../NewUser/NewUser";
+import Users from "../Users/Users";
 
 const Content = () => {
     return (
         <div className={"content-app"}>
             <HeaderApp/>
-            <Switch>
-                <Route exact path={"/sendMessage"} component={PageSendMessage}/>
-                <Route exact path={"/"} component={PageListMessage}/>
-                <Route exact path={"/sentMessage"} component={ListSentMessage}/>
-                <Route path={"/detailMessage/:id"} component={DetailMessage}/>
-                <Route path={"/sentMessage/:id"} component={ReadSentMessage}/>
-            </Switch>
+            <div className={"container"}>
+                <div className="dynamic-page">
+                    <Switch>
+                        <Route exact path={"/sendMessage"} component={SendMessage}/>
+                        <Route exact path={"/"} component={ListMessage}/>
+                        <Route exact path={"/sentMessage"} component={ListSentMessage}/>
+                        <Route path={"/detailMessage/:id"} component={DetailMessage}/>
+                        <Route path={"/sentMessage/:id"} component={ReadMessage}/>
+                        <Route path={"/newUser"} component={NewUser}/>
+                        <Route path={"/users"} component={Users}/>
+                    </Switch>
+                </div>
+            </div>
         </div>
     );
 };

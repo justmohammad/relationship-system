@@ -1,4 +1,4 @@
-header {
+.header-app {
   height: 70px;
   width: 100%;
   border-bottom: 1px solid rgba(195, 199, 199, 0.72);
@@ -9,9 +9,17 @@ header {
     .header-right {
       height: 69px;
       padding-right: 20px;
+      padding-top: 10px;
       background: #fff;
       display: flex;
       align-items: center;
+
+      p {
+        i {
+          font-size: 24px;
+          padding-left: 15px;
+        }
+      }
     }
 
     .header-left {
@@ -22,6 +30,8 @@ header {
 
       img {
         margin-left: 10px;
+        width: 35px;
+        height: 35px;
       }
 
       h5 {
@@ -39,3 +49,19 @@ header {
     }
   }
 }
+
+.style-button-dropdown button {
+  background: #fff;
+  color: #000;
+  border: 0;
+
+  &:hover {
+    background: rgba(250, 247, 247, 0.73);
+    color: #2172af;
+  }
+
+  &:after {
+    content: none;
+  }
+}
+

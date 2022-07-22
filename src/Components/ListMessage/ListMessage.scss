@@ -1,9 +1,15 @@
 .list-message {
   margin: 20px;
 
+  .search {
+    display: flex;
+    margin: 0;
+  }
+
   input[type=search] {
     width: 300px;
     margin-bottom: 20px;
+    margin-right: 15px;
   }
 
   label {
