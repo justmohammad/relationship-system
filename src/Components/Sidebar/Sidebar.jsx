@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './Sidebar.scss';
 import 'react-pro-sidebar/dist/css/styles.css';
 import {Link, useLocation} from "react-router-dom";
@@ -10,6 +10,7 @@ import {
     BsFillCursorFill, BsFillPaletteFill,
     BsFillPersonPlusFill, BsPeopleFill
 } from "react-icons/bs";
+import SidebarContext from "../Context";
 
 const Sidebar = () => {
 
@@ -21,13 +22,15 @@ const Sidebar = () => {
         })
     }, [])
 
+    const sidebarContext = useContext(SidebarContext);
+
     return (
 
-        <ProSidebar breakPoint={"md"} rtl>
+        <ProSidebar breakPoint={"md"} collapsed={sidebarContext.sidebar === true} rtl>
             <SidebarHeader>
                 <div className="header-panel">
                     <i><BsFillPaletteFill/></i>
-                    <h5>پنل مدیریت</h5>
+                    <h5 style={{display: sidebarContext.sidebar ? "none" : "block"}}>پنل مدیریت</h5>
                 </div>
 
             </SidebarHeader>

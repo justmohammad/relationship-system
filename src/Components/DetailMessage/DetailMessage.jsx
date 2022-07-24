@@ -1,51 +1,126 @@
-import React, { useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useReducer} from 'react';
+import Form from 'react-bootstrap/Form';
 import './DetailMessage.scss';
 import {Link, useParams} from "react-router-dom";
 import {GetAllUsers} from "../../Api/FunctionsApi/GetApi"
 import axios from "axios";
+import {Row} from "react-bootstrap";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import {SubmitMessage} from "../../Api/FunctionsApi/PostApi";
+import {toast} from "react-toastify";
 
 const DetailMessage = () => {
 
-    const accordionRef = useRef()
+    const accordionRef1 = useRef()
     const accordionRef2 = useRef()
+    const accordionRef3 = useRef()
 
-    const Reference = () => {
+    const StatusMessageShow = () => {
+        accordionRef1.current.click()
+        document.getElementById('panelsStayOpen-headingTree').style.display = "flex"
+        accordionRef3.current.click()
+        document.getElementById('panelsStayOpen-headingOne').style.display = "none"
+    }
+    const StatusMessageHide = () => {
+        accordionRef1.current.click()
+        document.getElementById('panelsStayOpen-headingOne').style.display = "flex"
+        accordionRef3.current.click()
+        document.getElementById('panelsStayOpen-headingTree').style.display = "none"
+    }
+
+
+    const SendShow = () => {
+        accordionRef1.current.click()
         document.getElementById('panelsStayOpen-headingTwo').style.display = "flex"
         accordionRef2.current.click()
+        document.getElementById('panelsStayOpen-headingOne').style.display = "none"
     }
 
-    const Reference2 = () => {
+    const SendHide = () => {
+        accordionRef1.current.click()
+        document.getElementById('panelsStayOpen-headingOne').style.display = "flex"
+        accordionRef2.current.click()
         document.getElementById('panelsStayOpen-headingTwo').style.display = "none"
-        accordionRef.current.click()
     }
 
-    const [organization,setOrganization] = useState([]);
-    const [message,setMessage] = useState([]);
+    const reducer = (state, action) => {
+        switch (action.type) {
+            case "COMPLETE":
+                const unique = arr => [...new Set(arr)];
+                return unique([...state, action.value]);
+            case "EMPTY":
+                return state = [];
+            default:
+                return state;
+        }
+    };
+
+    const animatedComponents = makeAnimated();
+    const [organization, setOrganization] = useState([]);
+    const [to_user, dispatch] = useReducer(reducer, []);
+
+    const options = []
+    for (let i = 0; i < organization.length; i++) {
+        options[i] = {
+            value: organization[i].office,
+            label: organization[i].office,
+        };
+    }
+
+    const [message, setMessage] = useState([]);
 
     let {id} = useParams();
 
 
     useEffect(() => {
-        GetAllUsers((isOk, data)=>{
+        GetAllUsers((isOk, data) => {
             isOk ? setOrganization(data) : alert('a');
         });
-    },[])
+    }, [])
 
     useEffect(() => {
-        axios.get(`http://relapp.freehost.io/rest/apiediteMessages.php?id=${id}`)
-        .then(Response => {
-           const data = Response.data;
-           setMessage(data);
+        axios.get(`http://relapp.freehost.io/restApi/GetApi/GetDetailMessage.php?id=${id}`)
+            .then(Response => {
+                const data = Response.data;
+                setMessage(data);
             })
-        .catch(error => console.log(error));
-    },[])
+            .catch(error => console.log(error));
+    }, [])
 
+    const SendReply = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('subject', 'value.subject');
+        formData.append('text', 'value.message');
+        formData.append('from', 'localStorage.getItem()');
+        formData.append('to', 'JSON.stringify(to_user)');
+
+
+        console.log(formData);
+        //console.log(value);
+
+        SubmitMessage(formData, (isOk) => {
+            if (isOk) {
+                toast.success('پیام با موفقیت ارسال شد', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        })
+    }
 
     return (
         <div className="accordion" id="accordionExample">
             <div className="accordion-item">
                 <h2 className="accordion-header" id="headingOne">
-                    <button className="accordion-button" type="button" data-bs-toggle="collapse" ref={accordionRef}
+                    <button className="accordion-button" id={"panelsStayOpen-headingOne"} type="button"
+                            data-bs-toggle="collapse" ref={accordionRef1}
                             data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         جزئیات پیام
                     </button>
@@ -54,51 +129,152 @@ const DetailMessage = () => {
                      data-bs-parent="#accordionExample">
                     <div className="accordion-body">
                         {
-                            message.map(value =>        
-                                <p>{value.text}</p>
+                            message.map(value =>
+                                <Row>
+                                    <div className={"d-md-flex col-md-6 pd-20"}>
+                                        <b>مبدا : </b>
+                                        <p className={"mg-10"}>{value.from_user}</p>
+                                    </div>
+                                    <div className={"d-md-flex col-md-6 pd-20"}>
+                                        <b>مقصد : </b>
+                                        <p className={"mg-10"}>{localStorage.getItem("office")}</p>
+                                    </div>
+                                    <div className={"d-md-flex col-md-6 pd-20"}>
+                                        <b>موضوع : </b>
+                                        <p className={"mg-10"}>{value.subject}</p>
+                                    </div>
+                                    <div className={"d-md-flex col-md-6 pd-20"}>
+                                        <b>تاریخ : </b>
+                                        <p className={"mg-10"}>{value.date_message}</p>
+                                    </div>
+                                    <div className={"pd-20"}>
+                                        <b>پیام :</b>
+                                        <p className={"pd-20"}>{value.message}</p>
+                                    </div>
+                                </Row>
                             )
                         }
-                        <button className={"btn btn-primary"}><Link to={"/"}>بازگشت</Link></button>
-                        <button className={"btn btn-primary"} onClick={Reference}>ارجاع به جای دیگر</button>
-                        <button className={"btn btn-primary"}>انجام شد و ارسال به فرستنده</button>
+                        <button className={"btn btn-primary btn-sm"}><Link to={"/"}>بازگشت</Link></button>
+                        <button className={"btn btn-primary btn-sm"} onClick={SendShow}>ارجاع دادن</button>
+                        <button className={"btn btn-primary btn-sm"} onClick={StatusMessageShow}>اعلام وضعیت پیام
+                        </button>
                     </div>
                 </div>
             </div>
             <div className="accordion-item">
                 <h2 className="accordion-header" id="headingTwo">
-                    <button className="accordion-button collapsed" id={"panelsStayOpen-headingTwo"} type="button" data-bs-toggle="collapse" ref={accordionRef2} style={{display: "none"}}
+                    <button className="accordion-button collapsed" id={"panelsStayOpen-headingTwo"} type="button"
+                            data-bs-toggle="collapse" ref={accordionRef2} style={{display: "none"}}
                             data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        پاسخ به پیام
+                        ارجاع دادن
                     </button>
                 </h2>
                 <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo"
                      data-bs-parent="#accordionExample">
                     <div className="accordion-body">
+                            {
+                                message.map(value =>
+                                    <form>
+                                        <Row>
+                                            <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                                <b>مبدا : </b>
+                                                <p className={"mg-10"}>{value.from_user}</p>
+                                            </div>
+                                            <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                                <b>مقصد : </b>
+                                                <p className={"mg-10"}>{localStorage.getItem("office")}</p>
+                                            </div>
+                                            <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                                <b>موضوع : </b>
+                                                <p className={"mg-10"}>{value.subject}</p>
+                                            </div>
+                                            <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                                <b>تاریخ : </b>
+                                                <p className={"mg-10"}>{value.date_message}</p>
+                                            </div>
+                                            <div className={"pd-20 text-muted"}>
+                                                <b>پیام :</b>
+                                                <p className={"pd-20"}>{value.message}</p>
+                                            </div>
+                                            <div className={"select-send d-md-flex align-items-center"}>
+                                                <p className={"pd-20"}>ارجاع به :</p>
+                                                <Select
+                                                    onChange={event => (event.map(item => dispatch({
+                                                        type: "COMPLETE",
+                                                        value: item.value
+                                                    })))}
+                                                    closeMenuOnSelect={false}
+                                                    components={animatedComponents}
+                                                    isMulti
+                                                    options={options}
+                                                />
+                                            </div>
+                                        </Row>
+                                        <button className={"btn btn-primary btn-sm"} onClick={SendHide}>بازگشت</button>
+                                        <button type={"submit"} className={"btn btn-primary btn-sm"}
+                                                onClick={SendReply}>ارجاع
+                                        </button>
+                                    </form>
+                                )
+                            }
+                    </div>
+                </div>
+            </div>
+            <div className="accordion-item">
+                <h2 className="accordion-header" id="headingTree">
+                    <button className="accordion-button collapsed" id={"panelsStayOpen-headingTree"} type="button"
+                            data-bs-toggle="collapse" ref={accordionRef3} style={{display: "none"}}
+                            data-bs-target="#collapseTree" aria-expanded="false" aria-controls="collapseTree">
+                        اعلام وضعیت پیام
+                    </button>
+                </h2>
+                <div id="collapseTree" className="accordion-collapse collapse" aria-labelledby="headingTree"
+                     data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
                         {
-                            message.map(value =>        
-                                <p className={"text-muted"}>{value.text}</p>
+                            message.map(value =>
+                                <Row>
+                                    <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                        <b>مبدا : </b>
+                                        <p className={"mg-10"}>{value.from_user}</p>
+                                    </div>
+                                    <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                        <b>مقصد : </b>
+                                        <p className={"mg-10"}>{localStorage.getItem("office")}</p>
+                                    </div>
+                                    <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                        <b>موضوع : </b>
+                                        <p className={"mg-10"}>{value.subject}</p>
+                                    </div>
+                                    <div className={"d-md-flex col-md-6 pd-20 text-muted"}>
+                                        <b>تاریخ : </b>
+                                        <p className={"mg-10"}>{value.date_message}</p>
+                                    </div>
+                                    <div className={"pd-20 text-muted"}>
+                                        <b>پیام :</b>
+                                        <p className={"pd-20"}>{value.message}</p>
+                                    </div>
+                                    <div className={"d-md-flex align-items-center"}>
+                                        <p className={"pd-20"}>درصد انجام :</p>
+                                        <Form.Select className={"complete-message"} aria-label="Default select example">
+                                            <option>0%</option>
+                                            <option value="1">10%</option>
+                                            <option value="2">20%</option>
+                                            <option value="3">30%</option>
+                                            <option value="3">40%</option>
+                                            <option value="3">50%</option>
+                                            <option value="3">60%</option>
+                                            <option value="3">70%</option>
+                                            <option value="3">80%</option>
+                                            <option value="3">90%</option>
+                                            <option value="3">100%</option>
+                                        </Form.Select>
+                                    </div>
+                                </Row>
                             )
                         }
-                        
-                        <form>
-                            <div className="mb-3">
-                                <label htmlFor="exampleInputCheck" className="form-label">به سازمان های :</label>
-                                <div id="exampleInputCheck" className="to-org">
-                                    {
-                                        organization.map(value =>
-                                            <div className="form-check">
-                                                <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                    {value.Organization}
-                                                </label>
-                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                                            </div>
-                                        )
-                                    }
-                                </div>
-                            </div>
-                        </form>
-                        <button className={"btn btn-primary"} onClick={Reference2}>بازگشت</button>
-                        <button className={"btn btn-primary"}>ارسال پاسخ</button>
+                        <button className={"btn btn-primary btn-sm"} onClick={StatusMessageHide}>بازگشت</button>
+                        <button className={"btn btn-primary btn-sm"}>ارسال وضعیت به فرستنده</button>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import './HeaderApp.scss';
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
@@ -6,8 +6,11 @@ import DateObject from "react-date-object";
 import {BsList} from "react-icons/bs";
 import {Container, DropdownButton, Row} from "react-bootstrap";
 import Dropdown from 'react-bootstrap/Dropdown';
+import SidebarContext from "../Context";
 
 const HeaderApp = () => {
+
+    const sidebarContext = useContext(SidebarContext)
 
     const date = new DateObject({calendar: persian, locale: persian_fa})
     const inputRef = useRef();
@@ -48,11 +51,13 @@ const HeaderApp = () => {
         }*/
     }
 
+    const collapseSidebar = () => sidebarContext.sidebar ? sidebarContext.setSidebar(false) : sidebarContext.setSidebar(true);
+
     return (
         <header className={"header-app"}>
             <div className="title-app">
                 <div className="header-right col-md-9">
-                    <p><i><BsList/></i></p>
+                    <p onClick={collapseSidebar} style={{cursor: "pointer"}}><i><BsList/></i></p>
                     <p> تاریخ امروز : {date.format()}</p>
                 </div>
                 <div className="header-left col-md-3">

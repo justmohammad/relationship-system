@@ -1,13 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import './ListSentMessage.scss';
-import {BsCheckCircleFill, BsFileText} from "react-icons/bs";
+import {BsFileEarmarkMinusFill} from "react-icons/bs";
 import {Link} from "react-router-dom";
-import axios from "axios"
 import {GetSentMessages} from "../../Api/FunctionsApi/GetApi";
+import {Body, Cell, Header, HeaderCell, HeaderRow, Row, Table} from "@table-library/react-table-library";
+import {useTheme} from "@table-library/react-table-library/theme";
+import {getTheme} from "@table-library/react-table-library/baseline";
+import {usePagination} from "@table-library/react-table-library/pagination";
 
 const ListSentMessage = () => {
 
     const [message, setMessage] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         const data = new FormData();
@@ -18,51 +22,90 @@ const ListSentMessage = () => {
         })
     }, [message])
 
+    const nodes = message;
+    let data = {nodes};
+    data = {
+        nodes: data.nodes.filter((item) => item.subject.includes(search)),
+    };
+
+    const handleSearch = (event) => {
+        setSearch(event.target.value);
+    };
+
+    const pagination = usePagination(data, {
+        state: {
+            page: 0,
+            size: 11,
+        },
+        onChange: onPaginationChange,
+    });
+
+    function onPaginationChange(action, state) {
+        console.log(action, state);
+    }
+
+    const theme = useTheme(getTheme());
+
     return (
-        <div className={"list-message"} id={"list-message"}>
-            <form action="" className={"search"}>
-                <label htmlFor="search-message">جستجو :</label>
-                <input type="search" id={"search-message"} className={"form-control"}/>
-            </form>
-            <label htmlFor="list-message">لیست پیام ها</label>
+        <>
             {
                 !message ? <div style={{margin: "50px 500px"}}>پیامی موجود نیست</div> :
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">به طرف</th>
-                            <th scope="col">عنوان</th>
-                            <th scope="col">تاریخ</th>
-                            <th scope="col">وضعیت</th>
-                            <th scope="col">جزئیات</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            message.map((value, index) =>
-                                <tr>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{value.to_user}</td>
-                                    <td>{value.subject}</td>
-                                    <td>{value.date_message}</td>
-                                    <td style={{color: "green", margin: "5px"}}>
-                                        {value.status}
-                                        <BsCheckCircleFill style={{marginRight: "5px"}}/>
-                                    </td>
-                                    <td>
-                                        <i>
-                                            <button><Link to={`/sentMessage/${value.id}`}><BsFileText
-                                                className={"text-primary"}/></Link></button>
-                                        </i>
-                                    </td>
-                                </tr>
-                            )
-                        }
-                        </tbody>
-                    </table>
+                    <>
+                        <label htmlFor="search">
+                            Search :&nbsp;
+                            <input id="search" type="text" value={search} onChange={handleSearch}/>
+                        </label>
+                        <br/>
+                        <Table data={data} theme={theme} pagination={pagination}>
+                            {(tableList) => (
+                                <>
+                                    <Header>
+                                        <HeaderRow>
+                                            <HeaderCell>از طرف</HeaderCell>
+                                            <HeaderCell>موضوع</HeaderCell>
+                                            <HeaderCell>تاریخ</HeaderCell>
+                                            <HeaderCell>جزئیات</HeaderCell>
+                                        </HeaderRow>
+                                    </Header>
+
+                                    <Body>
+                                        {tableList.map((item) => (
+                                            <Row key={item.id} item={item}>
+                                                <Cell>{item.from_user}</Cell>
+                                                <Cell>
+                                                    {item.subject}
+                                                </Cell>
+                                                <Cell>{item.date_message}</Cell>
+                                                <Cell><Link
+                                                    to={`/detailMessage/${item.id}`}><i><BsFileEarmarkMinusFill/></i></Link></Cell>
+                                            </Row>
+                                        ))}
+                                    </Body>
+                                </>
+                            )}
+                        </Table>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span>Total Pages: {pagination.state.getTotalPages(data.nodes)}</span>
+
+                            <span>
+            Page:{' '}
+                                {pagination.state.getPages(data.nodes).map((_, index) => (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        style={{
+                                            fontWeight: pagination.state.page === index ? 'bold' : 'normal',
+                                        }}
+                                        onClick={() => pagination.fns.onSetPage(index)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+          </span>
+                        </div>
+                    </>
             }
-        </div>
+        </>
     );
 };
 

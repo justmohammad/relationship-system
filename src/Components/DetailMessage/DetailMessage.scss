@@ -16,24 +16,29 @@
       margin-left: 10px;
 
       a {
-          color: #fff;
-          text-decoration: none;
+        color: #fff;
+        text-decoration: none;
       }
     }
   }
 }
 
-form {
-  margin: 20px 20px 200px;
+.mg-10 {
+  margin: 0 10px;
+}
 
-  .form-check {
-    display: flex;
-    align-items: center;
-    margin: 10px;
-    float: right;
+.pd-20 {
+  padding: 20px;
+}
 
-    input {
-      margin: 0 5px;
-    }
+.complete-message {
+  width: 8%;
+  height: 40%;
+}
+
+.select-send {
+  .css-b62m3t-container {
+    width: 30%;
   }
+
 }

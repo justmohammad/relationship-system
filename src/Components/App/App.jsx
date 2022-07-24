@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../../Config/font.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap';
@@ -7,10 +7,18 @@ import Sidebar from "../Sidebar/Sidebar";
 import Content from "../Content/Content";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Login from "../Login/Login";
+import SidebarContext from "../Context";
 
 const App = () => {
+
+    const [sidebar,setSidebar] = useState(false);
     return (
         <BrowserRouter>
+            <SidebarContext.Provider value={{
+                sidebar: sidebar,
+                setSidebar
+            }}>
+
             <Switch>
                 <PublicRoute exact path={"/login"} component={Login}/>
                 <PrivateRoute path={"/"} render={() =>
@@ -20,6 +28,7 @@ const App = () => {
                     </div>
                 }/>
             </Switch>
+            </SidebarContext.Provider>
         </BrowserRouter>
     );
 }
