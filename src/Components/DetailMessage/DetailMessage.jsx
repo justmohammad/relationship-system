@@ -75,7 +75,7 @@ const DetailMessage = (props) => {
     let {id} = useParams();
 
     useEffect(() => {
-        GetAllUsers((isOk, data) => {
+        GetAllUsers(localStorage.getItem("id"),(isOk, data) => {
             isOk ? setOrganization(data) : alert('a');
         });
     }, [])

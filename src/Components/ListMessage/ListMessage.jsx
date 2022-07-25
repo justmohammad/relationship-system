@@ -25,7 +25,7 @@ const ListMessage = () => {
     const nodes = message;
     let data = {nodes};
     data = {
-        nodes: data.nodes.filter((item) => item.subject.includes(search)),
+        nodes: message ? data.nodes.filter((item) => item.subject.includes(search)) : '',
     };
 
     const handleSearch = (event) => {

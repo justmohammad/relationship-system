@@ -1,7 +1,7 @@
 import {GetInstanceApi} from "../BaseApi/BaseApi";
 
-export const GetAllUsers = (callback) => {
-    GetInstanceApi().get("GetAllUsers.php")
+export const GetAllUsers = (id,callback) => {
+    GetInstanceApi().get(`GetAllUsers.php?id=${id}`)
         .then(Response => {
             const data = Response.data;
             callback(true, data);
