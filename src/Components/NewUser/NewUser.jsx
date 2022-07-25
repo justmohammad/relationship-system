@@ -83,6 +83,7 @@ const NewUser = () => {
     const theme = useTheme(getTheme());
 
     return (
+        !users ? <div style={{margin: "50px 500px"}}>کاربر جدیدی موجود نیست</div> :
         <Table data={data} theme={theme}>
             {(tableList) => (
                 <>

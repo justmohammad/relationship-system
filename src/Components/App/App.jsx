@@ -7,11 +7,12 @@ import Sidebar from "../Sidebar/Sidebar";
 import Content from "../Content/Content";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Login from "../Login/Login";
-import SidebarContext from "../Context";
+import SidebarContext from "../Contexts/SidebarContext";
 
 const App = () => {
 
     const [sidebar,setSidebar] = useState(false);
+
     return (
         <BrowserRouter>
             <SidebarContext.Provider value={{

@@ -22,6 +22,7 @@ const Users = () => {
     }, [data])
 
     const deleteUser = (id) => {
+
         DeleteUser(id, (isOk) => {
             if (isOk) {
                 toast.success('کاربر با موفقیت حذف شد', {

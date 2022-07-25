@@ -6,7 +6,7 @@ import DateObject from "react-date-object";
 import {BsList} from "react-icons/bs";
 import {Container, DropdownButton, Row} from "react-bootstrap";
 import Dropdown from 'react-bootstrap/Dropdown';
-import SidebarContext from "../Context";
+import SidebarContext from "../Contexts/SidebarContext";
 
 const HeaderApp = () => {
 

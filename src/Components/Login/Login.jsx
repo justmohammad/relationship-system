@@ -58,6 +58,7 @@ const LoginForm = (mode) => {
                                 data.append('office', office);
                                 data.append('email', createEmail);
                                 data.append('password', createPassword);
+                                console.log(data)
 
                                 SignUpUser(data, (isOk) => {
                                     if (isOk) {

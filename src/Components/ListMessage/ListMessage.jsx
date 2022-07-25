@@ -63,6 +63,7 @@ const ListMessage = () => {
                                         <HeaderRow>
                                             <HeaderCell>از طرف</HeaderCell>
                                             <HeaderCell>موضوع</HeaderCell>
+                                            <HeaderCell>وضعیت</HeaderCell>
                                             <HeaderCell>تاریخ</HeaderCell>
                                             <HeaderCell>جزئیات</HeaderCell>
                                         </HeaderRow>
@@ -72,12 +73,13 @@ const ListMessage = () => {
                                         {tableList.map((item) => (
                                             <Row key={item.id} item={item}>
                                                 <Cell>{item.from_user}</Cell>
-                                                <Cell>
-                                                    {item.subject}
-                                                </Cell>
+                                                <Cell>{item.subject}</Cell>
+                                                <Cell>{`${item.status}% انجام شده`}</Cell>
                                                 <Cell>{item.date_message}</Cell>
-                                                <Cell><Link
-                                                    to={`/detailMessage/${item.id}`}><i><BsFileEarmarkMinusFill/></i></Link></Cell>
+                                                <Cell>
+                                                    <Link
+                                                        to={`/home/detailMessage/${item.id}`}><i><BsFileEarmarkMinusFill/></i></Link>
+                                                </Cell>
                                             </Row>
                                         ))}
                                     </Body>

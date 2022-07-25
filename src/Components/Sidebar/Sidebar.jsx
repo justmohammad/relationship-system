@@ -10,7 +10,7 @@ import {
     BsFillCursorFill, BsFillPaletteFill,
     BsFillPersonPlusFill, BsPeopleFill
 } from "react-icons/bs";
-import SidebarContext from "../Context";
+import SidebarContext from "../Contexts/SidebarContext";
 
 const Sidebar = () => {
 

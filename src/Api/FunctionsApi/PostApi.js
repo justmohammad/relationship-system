@@ -22,7 +22,7 @@ export const AddUser = (data, callback) => {
 }
 
 export const SubmitMessage = (data, callback) => {
-    Axios.post(`http://relapp.freehost.io/restApi/PostApi/SendMessage.php`, data)
+    PostInstanceApi().post(`SendMessage.php`, data)
         .then(
             callback(true)
         ).catch(error => {

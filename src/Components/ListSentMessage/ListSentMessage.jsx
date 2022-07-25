@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './ListSentMessage.scss';
 import {BsFileEarmarkMinusFill} from "react-icons/bs";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {GetSentMessages} from "../../Api/FunctionsApi/GetApi";
 import {Body, Cell, Header, HeaderCell, HeaderRow, Row, Table} from "@table-library/react-table-library";
 import {useTheme} from "@table-library/react-table-library/theme";
@@ -12,6 +12,8 @@ const ListSentMessage = () => {
 
     const [message, setMessage] = useState([]);
     const [search, setSearch] = useState('');
+
+    const {pathname} = useLocation();
 
     useEffect(() => {
         const data = new FormData();
@@ -61,8 +63,9 @@ const ListSentMessage = () => {
                                 <>
                                     <Header>
                                         <HeaderRow>
-                                            <HeaderCell>از طرف</HeaderCell>
+                                            <HeaderCell>{pathname === '/sentMessage' ? 'به طرف' : 'از طرف'}</HeaderCell>
                                             <HeaderCell>موضوع</HeaderCell>
+                                            <HeaderCell>وضعیت</HeaderCell>
                                             <HeaderCell>تاریخ</HeaderCell>
                                             <HeaderCell>جزئیات</HeaderCell>
                                         </HeaderRow>
@@ -71,13 +74,12 @@ const ListSentMessage = () => {
                                     <Body>
                                         {tableList.map((item) => (
                                             <Row key={item.id} item={item}>
-                                                <Cell>{item.from_user}</Cell>
-                                                <Cell>
-                                                    {item.subject}
-                                                </Cell>
+                                                <Cell>{pathname === '/sentMessage' ? item.to_user.replace("[",'').replace("]",'').replace(",","--") : item.from_user}</Cell>
+                                                <Cell>{item.subject}</Cell>
+                                                <Cell>{`${item.status}% انجام شده`}</Cell>
                                                 <Cell>{item.date_message}</Cell>
                                                 <Cell><Link
-                                                    to={`/detailMessage/${item.id}`}><i><BsFileEarmarkMinusFill/></i></Link></Cell>
+                                                    to={`/sentMessage/detailMessage/${item.id}`}><i><BsFileEarmarkMinusFill/></i></Link></Cell>
                                             </Row>
                                         ))}
                                     </Body>

@@ -17,3 +17,9 @@ export const DeleteInstanceApi = () => {
         baseURL : "http://relapp.freehost.io/restApi/DeleteApi/"
     })
 }
+
+export const UpdateInstanceApi = () => {
+    return Axios.create({
+        baseURL : "http://relapp.freehost.io/restApi/UpdateApi/"
+    })
+}
