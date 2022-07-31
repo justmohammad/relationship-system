@@ -7,16 +7,27 @@ import {Body, Cell, Header, HeaderCell, HeaderRow, Row, Table} from "@table-libr
 import {useTheme} from "@table-library/react-table-library/theme";
 import {getTheme} from "@table-library/react-table-library/baseline";
 import {usePagination} from "@table-library/react-table-library/pagination";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 const Users = () => {
 
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
+    const [userAction, setUserAction] = useState([]);
+    const [showModal1, setShowModal1] = useState(false);
+
+    const handleCloseModal1 = () => setShowModal1(false);
+    const handleShowModal1 = (value) => {
+        setUserAction(value);
+        setShowModal1(true);
+    }
+
     const nodes = users;
     let data = {nodes};
 
     useEffect(() => {
-        GetAllUsers((isOk, data) => {
+        GetAllUsers(localStorage.getItem("id"),(isOk, data) => {
             if (isOk) setUsers(data)
         });
     }, [data])
@@ -36,10 +47,12 @@ const Users = () => {
                 });
             }
         })
+
+        handleCloseModal1()
     }
 
     data = {
-        nodes: data.nodes.filter((item) => item.name.includes(search)),
+        nodes: users ? data.nodes.filter((item) => item.name.includes(search)) : '',
     };
 
     const handleSearch = (event) => {
@@ -90,7 +103,7 @@ const Users = () => {
                                                     {item.office}
                                                 </Cell>
                                                 <Cell>{item.email}</Cell>
-                                                <Cell><button className={"text-danger"} style={{background: "transparent",border: "0"}} onClick={() => deleteUser(item.id)}><BsTrashFill/></button></Cell>
+                                                <Cell><button className={"text-danger"} style={{background: "transparent",border: "0"}} onClick={() => handleShowModal1(item)}><BsTrashFill/></button></Cell>
                                             </Row>
                                         ))}
                                     </Body>
@@ -118,6 +131,18 @@ const Users = () => {
                         </div>
                     </>
             }
+
+            <Modal show={showModal1} onHide={handleCloseModal1}>
+                <Modal.Body>آیا کاربر جدید را حذف می کنید؟</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal1}>
+                        بستن
+                    </Button>
+                    <Button variant="danger" onClick={() => deleteUser(userAction.id)}>
+                        حذف
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

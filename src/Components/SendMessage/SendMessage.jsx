@@ -37,7 +37,7 @@ const SendMessage = () => {
     }
 
     useEffect(() => {
-        GetAllUsers((isOk, data) => {
+        GetAllUsers(localStorage.getItem("id"),(isOk, data) => {
             if (isOk) setOrganization(data)
         });
     }, [])

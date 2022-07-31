@@ -3,7 +3,7 @@ import './Sidebar.scss';
 import 'react-pro-sidebar/dist/css/styles.css';
 import {Link, useLocation} from "react-router-dom";
 import {GetAdmin} from "../../Api/FunctionsApi/GetApi";
-import {Menu, MenuItem, ProSidebar, SidebarHeader} from "react-pro-sidebar";
+import {Menu, MenuItem, ProSidebar, SidebarFooter, SidebarHeader} from "react-pro-sidebar";
 import {
     BsEnvelopeFill,
     BsEnvelopeOpenFill,
@@ -57,6 +57,9 @@ const Sidebar = () => {
                     )
                 }
             </Menu>
+            <SidebarFooter className={"position-relative"} style={{top: "35%"}}>
+                <p className={"d-md-flex justify-content-center"} style={{marginTop: "50px"}}>تهیه شده در استانداری مرکزی</p>
+            </SidebarFooter>
         </ProSidebar>
     );
 };

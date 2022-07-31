@@ -1,5 +1,4 @@
 import {PostInstanceApi} from "../BaseApi/BaseApi";
-import Axios from "axios";
 
 export const SignUpUser = (data, callback) => {
     PostInstanceApi().post(`SignUpUser.php`, data)

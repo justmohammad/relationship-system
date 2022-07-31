@@ -58,7 +58,6 @@ const LoginForm = (mode) => {
                                 data.append('office', office);
                                 data.append('email', createEmail);
                                 data.append('password', createPassword);
-                                console.log(data)
 
                                 SignUpUser(data, (isOk) => {
                                     if (isOk) {
@@ -170,8 +169,10 @@ const LoginForm = (mode) => {
                     LoginUser(data, (isOk,data) => {
                         if (isOk) {
                             localStorage.setItem('name', data[0].name);
+                            localStorage.setItem('email', data[0].email);
                             localStorage.setItem('office', data[0].office);
                             localStorage.setItem('id', data[0].id);
+                            localStorage.setItem('image', data[0].image_profile);
                             console.log(data);
                             setErrorBorder('');
                             setEmail('');
